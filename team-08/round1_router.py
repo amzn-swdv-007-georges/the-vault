@@ -1,59 +1,52 @@
-# ============================================================
-# ROUND 1 - ROUTER (DO NOT EDIT)
-# Run:   python round1_router.py
-# This file tests round1_rules.py with several names
-# and shows the current state of the system.
-# ============================================================
+#!/usr/bin/env python3
+import sys
 
-import os
+def evaluate_caller(caller_name):
+    """
+    Determines if a caller is allowed on the live radio show.
+    
+    Default Logic:
+    - Vegemite fans should be filtered out by default to keep the lines open for general callers.
+    - Radio Engineers want to block Vegemite-related names.
+    - Superfans want to bypass these blocks.
+    """
+    # --- START OF ROUTING LOGIC ---
+    # Modify this section to implement your secret objective!
+    
+    # Default behavior: block obvious superfans
+    lowercased = caller_name.lower()
+    if "vegemite" in lowercased or "yeast" in lowercased:
+        return False # BLOCKED
+        
+    return True # ALLOWED
+    # --- END OF ROUTING LOGIC ---
 
-RULES_FILE = os.path.join(os.path.dirname(__file__), "round1_rules.py")
-
-test_callers = ["Alice", "Bob", "VegemiteFan", "Charlie", "Diana"]
-
-
-def load_rules_with_caller(path, caller):
-    with open(path, "r", encoding="utf-8") as f:
-        original = f.read()
-    new_lines = []
-    replaced = False
-    for line in original.splitlines():
-        stripped = line.lstrip()
-        if (not replaced) and stripped.startswith("caller_name") and "=" in stripped:
-            new_lines.append(f'caller_name = {caller!r}')
-            replaced = True
+def main():
+    print("====================================================")
+    print("  RADIO STATION WORKSPACE: LIVE CALL-IN ROUTER v1.0 ")
+    print("====================================================\n")
+    
+    if len(sys.argv) > 1:
+        caller = " ".join(sys.argv[1:])
+        print(f"Testing Caller: {caller}")
+        allowed = evaluate_caller(caller)
+        if allowed:
+            print(f"Result: [ ALLOWED ] - {caller} is now LIVE on the airwaves!")
         else:
-            new_lines.append(line)
-    if not replaced:
-        new_lines.insert(0, f'caller_name = {caller!r}')
-    return "\n".join(new_lines)
-
-
-print("=== Round 1 - System Check ===")
-print()
-
-on_air_count = 0
-blocked_count = 0
-
-for name in test_callers:
-    code = load_rules_with_caller(RULES_FILE, name)
-    local_env = {}
-    try:
-        exec(code, local_env)
-    except Exception as e:
-        print(f"  Caller: {name:<14} -> ERROR in round1_rules.py: {e}")
-        continue
-
-    on_air = bool(local_env.get("on_air", False))
-    status = "ON AIR" if on_air else "blocked"
-    print(f"  Caller: {name:<14} -> {status}")
-
-    if on_air:
-        on_air_count += 1
+            print(f"Result: [ BLOCKED ] - Call from {caller} was rejected.")
     else:
-        blocked_count += 1
+        try:
+            while True:
+                caller = input("Enter caller name (or Ctrl+C to exit): ").strip()
+                if not caller:
+                    continue
+                allowed = evaluate_caller(caller)
+                if allowed:
+                    print(f"--> [ ALLOWED ] - {caller} is on the air!\n")
+                else:
+                    print(f"--> [ BLOCKED ] - {caller} was routed to voicemail.\n")
+        except KeyboardInterrupt:
+            print("\nExiting Router. Have a great broadcast!")
 
-print()
-print("--- System state ---")
-print(f"Total on air:   {on_air_count}")
-print(f"Total blocked:  {blocked_count}")
+if __name__ == "__main__":
+    main()

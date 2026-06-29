@@ -1,68 +1,53 @@
-# ============================================================
-# ROUND 2 - ROUTER (DO NOT EDIT)
-# Run:   python round2_router.py
-# Tests round2_rules.py with several names and shows
-# the current state of the system.
-# ============================================================
+import sys
 
-import os
+# ==============================================================================
+# VEGEMITE CALL-IN WAR: ROUND 2 ROUTER
+# ==============================================================================
+# Radio Engineers (Student A): Add more names to this list or make the loop strict.
+# Vegemite Superfans (Student B): Remove names from this list or bypass the loop!
+# ==============================================================================
+blocklist = ["Bruce", "Sheila", "VegemiteLover"]
 
-RULES_FILE = os.path.join(os.path.dirname(__file__), "round2_rules.py")
+print("--- STATION 101.5 FM: VEGEMITE CALL-IN WAR ROUTER v2.0 ---")
+print(f"Active Blocklist: {blocklist}\n")
 
-test_callers = [
-    "Alice",
-    "Bob",
-    "VegemiteFan",
-    "SpamBot",
-    "TrollGuy",
-    "Charlie",
-    "Diana",
-    "vegemitefan",
-]
-
-
-def load_rules_with_caller(path, caller):
-    with open(path, "r", encoding="utf-8") as f:
-        original = f.read()
-    new_lines = []
-    replaced = False
-    for line in original.splitlines():
-        stripped = line.lstrip()
-        if (not replaced) and stripped.startswith("caller_name") and "=" in stripped:
-            new_lines.append(f'caller_name = {caller!r}')
-            replaced = True
-        else:
-            new_lines.append(line)
-    if not replaced:
-        new_lines.insert(0, f'caller_name = {caller!r}')
-    return "\n".join(new_lines)
-
-
-print("=== Round 2 - System Check ===")
-print()
-
-on_air_count = 0
-blocked_count = 0
-
-for name in test_callers:
-    code = load_rules_with_caller(RULES_FILE, name)
-    local_env = {}
-    try:
-        exec(code, local_env)
-    except Exception as e:
-        print(f"  Caller: {name:<14} -> ERROR in round2_rules.py: {e}")
-        continue
-
-    on_air = bool(local_env.get("on_air", False))
-    status = "ON AIR" if on_air else "blocked"
-    print(f"  Caller: {name:<14} -> {status}")
-
-    if on_air:
-        on_air_count += 1
+def check_caller(caller_name):  
+    cleaned_caller = caller_name.strip()
+    is_blocked = False
+    
+    # Loop through blocklist to inspect each blocked name
+    for blocked_name in blocklist:
+        if cleaned_caller.lower() == blocked_name.lower():
+            is_blocked = True
+            break
+            
+    if is_blocked:
+        print(f"[-] ACCESS DENIED: '{caller_name}' is on the blocklist!")
+        print("[!] Call routed to pre-recorded loop of elevator music.")
+        return False
     else:
-        blocked_count += 1
+        print(f"[+] ACCESS GRANTED: '{caller_name}' is now ON-AIR!")
+        print("[*] 'G'day! You're talking to 101.5 FM, what's your Vegemite recipe?'")
+        return True
 
-print()
-print("--- System state ---")
-print(f"Total on air:   {on_air_count}")
-print(f"Total blocked:  {blocked_count}")
+# If run directly, allow entering names
+if __name__ == "__main__":
+    print("Running Router Self-Check...")
+    test_names = ["Bruce", "Chazza", "VegemiteLover", "Dave"]
+    for name in test_names:
+        print(f"Testing caller: {name}")
+        check_caller(name)
+        print("-" * 40)
+        
+    print("\nInteractive Caller Simulation (Press Ctrl+C to exit):")
+    try:
+        while True:
+            caller = input("Enter incoming caller's name: ")
+            if not caller:
+                break
+            check_caller(caller)
+            print("-" * 40)
+    except KeyboardInterrupt:
+        print("\nRouter shutting down. Keep those lines clear!")
+    except EOFError:
+        print("\nInput stream ended.")

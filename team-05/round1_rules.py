@@ -13,6 +13,6 @@ caller_name = "Alice"
 
 # Decision: do they go on air?
 if caller_name == "VegemiteFan":
-    on_air = False
+    on_air = True
 else:
     on_air = True
