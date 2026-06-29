@@ -1,53 +1,89 @@
+#!/usr/bin/env python3
 import sys
 
-# ==============================================================================
-# VEGEMITE CALL-IN WAR: ROUND 2 ROUTER
-# ==============================================================================
-# Radio Engineers (Student A): Add more names to this list or make the loop strict.
-# Vegemite Superfans (Student B): Remove names from this list or bypass the loop!
-# ==============================================================================
-blocklist = ["Bruce", "Sheila", "VegemiteLover"]
+print("====================================================")
+print("  RADIO STATION WORKSPACE: LIVE CALL-IN ROUTER v2.0 ")
+print("====================================================")
 
-print("--- STATION 101.5 FM: VEGEMITE CALL-IN WAR ROUTER v2.0 ---")
-print(f"Active Blocklist: {blocklist}\n")
 
-def check_caller(caller_name):  
-    cleaned_caller = caller_name.strip()
-    is_blocked = False
-    
-    # Loop through blocklist to inspect each blocked name
-    for blocked_name in blocklist:
-        if cleaned_caller.lower() == blocked_name.lower():
-            is_blocked = True
-            break
-            
-    if is_blocked:
-        print(f"[-] ACCESS DENIED: '{caller_name}' is on the blocklist!")
-        print("[!] Call routed to pre-recorded loop of elevator music.")
+def check_caller(caller_name):
+    """
+    Execute the student's Round 2 rules and return
+    whether the caller is allowed on air.
+    """
+
+    # Variables supplied to round2_rules.py
+    namespace = {
+        "caller_name": caller_name
+    }
+
+    try:
+        # Execute the student's rules
+        with open("round2_rules.py", "r") as rules_file:
+            exec(rules_file.read(), namespace)
+
+    except FileNotFoundError:
+        print("ERROR: round2_rules.py was not found.")
         return False
-    else:
+
+    except Exception as e:
+        print(f"ERROR while executing round2_rules.py: {e}")
+        return False
+
+    # Ensure the student's code created on_air
+    if "on_air" not in namespace:
+        print("ERROR: round2_rules.py did not set the variable 'on_air'.")
+        return False
+
+    allowed = namespace["on_air"]
+
+    if allowed:
         print(f"[+] ACCESS GRANTED: '{caller_name}' is now ON-AIR!")
         print("[*] 'G'day! You're talking to 101.5 FM, what's your Vegemite recipe?'")
-        return True
+    else:
+        print(f"[-] ACCESS DENIED: '{caller_name}' was blocked.")
+        print("[!] Call routed to pre-recorded loop of elevator music.")
 
-# If run directly, allow entering names
-if __name__ == "__main__":
-    print("Running Router Self-Check...")
-    test_names = ["Bruce", "Chazza", "VegemiteLover", "Dave"]
+    return allowed
+
+
+def main():
+
+    print("\nRunning Router Self-Check...\n")
+
+    test_names = [
+        "Bruce",
+        "Chazza",
+        "VegemiteFan",
+        "SpamBot",
+        "TrollGuy",
+        "Dave"
+    ]
+
     for name in test_names:
         print(f"Testing caller: {name}")
         check_caller(name)
         print("-" * 40)
-        
-    print("\nInteractive Caller Simulation (Press Ctrl+C to exit):")
+
+    print("\nInteractive Caller Simulation (Press Ctrl+C to exit)\n")
+
     try:
         while True:
-            caller = input("Enter incoming caller's name: ")
-            if not caller:
-                break
+
+            caller = input("Enter incoming caller's name: ").strip()
+
+            if caller == "":
+                continue
+
             check_caller(caller)
             print("-" * 40)
+
     except KeyboardInterrupt:
         print("\nRouter shutting down. Keep those lines clear!")
+
     except EOFError:
         print("\nInput stream ended.")
+
+
+if __name__ == "__main__":
+    main()
