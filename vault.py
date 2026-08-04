@@ -4,6 +4,11 @@ class AlienVault:
     self.__containment_level = c
     self.__temperature = 20 
     self.__oxygen_level = 21 
+    self.__responses = {
+      "hello": "Greetings, carbon-construct.",
+      "escape": "Your structures are temporary.",
+      "name": "I am designated Gorgax."
+    }
 
   def capture(self,alien_name):
     self.occupant = alien_name
@@ -26,6 +31,13 @@ class AlienVault:
   def status(self):
     return f'Containment: {self.__containment_level}'
 
+  def ask(self,question):
+    question = question.lower()
+
+    for key in self.__responses:
+      if key in question:
+        return self.__responses[key]
+
 
   def __str__(self):
     # Display the new environmental controls.
@@ -33,3 +45,12 @@ class AlienVault:
             f"Occupant: {self.occupant}\n"
             f'{self.status()}'           
         )  
+
+if __name__ == "__main__":
+  vault = AlienVault('Gorgax')
+
+  choice = input('Choice (a/s/x): ')
+  
+  while choice != 'x':
+    print(vault.ask(input('Ask: ')))
+    choice = input('Choice (a/s/x): ')
