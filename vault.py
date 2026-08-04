@@ -1,7 +1,7 @@
 class AlienVault:
   def __init__(self,occupant=None):
     self.occupant = occupant
-    self._containment_level = 100 
+    self.__containment_level = 100 
     self._temperature = 20 
     self._oxygen_level = 21 
 
@@ -19,7 +19,7 @@ class AlienVault:
     # Display the new environmental controls.
     return (
             f"Occupant: {self.occupant}\n"
-            f"Containment: {self._containment_level}%\n"
+            f"Containment: {self.__containment_level}%\n"
             f"Temperature: {self._temperature}°C\n"
             f"Oxygen: {self._oxygen_level}%"
         )  
