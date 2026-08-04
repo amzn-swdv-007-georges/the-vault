@@ -22,6 +22,4 @@ class AlienVault:
             f"Containment: {self.containment_level}%\n"
             f"Temperature: {self.temperature}°C\n"
             f"Oxygen: {self.oxygen_level}%"
-        )
-
-  
+        )  
