@@ -52,5 +52,11 @@ if __name__ == "__main__":
   choice = input('Choice (a/s/x): ')
   
   while choice != 'x':
-    print(vault.ask(input('Ask: ')))
+    match choice:
+      case 'a':
+        print(vault.ask(input('Ask: ')))
+      case 's':
+        print(vault)
+      case _:
+        print('Unknown choice!')
     choice = input('Choice (a/s/x): ')
