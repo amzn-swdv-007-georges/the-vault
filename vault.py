@@ -14,12 +14,22 @@ class AlienVault:
       return f'SYSTEM: The vault is empty.'
     return f'{self.occupant} responds with strange look.'
 
+  def reinforce(self,amount):
+    self.__containment_level = min(100,self.__containment_level+amount)
+
+  def weaken(self,amount):
+    self.__containment_level = max(0,self.__containment_level-amount)
+
+  def emergency_lockdown(self):
+    self.__containment_level = 100
+
+  def status(self):
+    return f'Containment: {self.__containment_level}'
+
 
   def __str__(self):
     # Display the new environmental controls.
     return (
             f"Occupant: {self.occupant}\n"
-            f"Containment: {self.__containment_level}%\n"
-            f"Temperature: {self.__temperature}°C\n"
-            f"Oxygen: {self.__oxygen_level}%"
+            f'{self.status()}'           
         )  
