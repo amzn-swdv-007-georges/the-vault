@@ -1,7 +1,7 @@
 class AlienVault:
-  def __init__(self,occupant=None):
+  def __init__(self,occupant=None,c=100):
     self.occupant = occupant
-    self.__containment_level = 100 
+    self.__containment_level = c
     self._temperature = 20 
     self._oxygen_level = 21 
 
