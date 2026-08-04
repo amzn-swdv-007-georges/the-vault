@@ -1,6 +1,9 @@
 class AlienVault:
   def __init__(self,occupant=None):
     self.occupant = occupant
+    self.containment_level = 100 
+    self.temperature = 20 
+    self.oxygen_level = 21 
 
   def capture(self,alien_name):
     self.occupant = alien_name
@@ -13,6 +16,12 @@ class AlienVault:
 
 
   def __str__(self):
-    return f'Vault occupant: {self.occupant}'
+    # Display the new environmental controls.
+    return (
+            f"Occupant: {self.occupant}\n"
+            f"Containment: {self.containment_level}%\n"
+            f"Temperature: {self.temperature}°C\n"
+            f"Oxygen: {self.oxygen_level}%"
+        )
 
   
