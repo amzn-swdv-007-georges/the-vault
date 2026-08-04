@@ -2,8 +2,8 @@ class AlienVault:
   def __init__(self,occupant=None,c=100):
     self.occupant = occupant
     self.__containment_level = c
-    self._temperature = 20 
-    self._oxygen_level = 21 
+    self.__temperature = 20 
+    self.__oxygen_level = 21 
 
   def capture(self,alien_name):
     self.occupant = alien_name
@@ -20,6 +20,6 @@ class AlienVault:
     return (
             f"Occupant: {self.occupant}\n"
             f"Containment: {self.__containment_level}%\n"
-            f"Temperature: {self._temperature}°C\n"
-            f"Oxygen: {self._oxygen_level}%"
+            f"Temperature: {self.__temperature}°C\n"
+            f"Oxygen: {self.__oxygen_level}%"
         )  
